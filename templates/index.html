@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8"> <!-- Emojies and international characters are displayed correctly -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures correct scaling with mobile devices-->
+    <title>Clash Royale Opponent Name Scanner</title> <!-- title for website -->
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}"> <!-- sets the stylesheet to the style.css file in static folder -->
+</head>
+<body>
+
+    <!-- div container that has the UI for the camera box and instructions -->
+    <div class="container">
+        <!-- Instructions -->
+        <h1>Scan Phone Screen 2</h1> 
+        <p>Point your camera to the player name and click capture</p>
+
+        <!-- Camera box -->
+        <div class="camera-box">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display:none;"></canvas> <!-- hidden canvas that is filled once button is clicked -->
+        </div>
+
+        <!-- Button to initiate the actions required to go from a screenshot to a searched RoyaleAPI profile -->
+        <button id="capture-btn">Capture & Search RoyaleAPI</button>
+    </div>
+
+    <!-- Takes a screenshot if button clicked and converts it to png to backend to handle-->
+    <script>
+        // Stores HTML elements into JS variables
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureBtn = document.getElementById('capture-btn');
+
+        //Prompts user for the rear-facing camera on a device
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment'}})
+            .then(stream => { //if no error, connects the live stream to one of the properties of the video object
+                video.srcObject = stream; 
+            })
+            .catch(err =>{ //sends error to terminal and to the user
+                console.error("Camera access error:", err);
+                alert("Could not access your camera. Please allow camera permissions");
+            });
+        
+        //snaps photo of the live screen, packages it up and sends it to Faslk for OCR processing
+        captureBtn.addEventListener('click', () => { //once button clicked, run everything inside of function
+                //Use the invisible canvas to take dimensions of the video
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                //2D drawing tool for the canvas
+                const context = canvas.getContext('2d');
+                //takes a frozen screenshot and paints it onto the canvas
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                //notifies user that it is processing the OCR disables button
+                captureBtn.innerText = "Processing OCR...";
+                captureBtn.disabled = true;
+
+                console.log(canvas.width, canvas.height);
+                //takes the image on the canvas and converts it to a blob (binary large object)
+                //This is because the backend needs the canvas image in an actual image file (.png)
+                canvas.toBlob(blob => {//once done converting run the code in the function
+                    const formData = new FormData(); //creates an invisible virtual HTML form in memory
+                    //image is the key/label, blob is the actual file data and snapshot.png is a fake filename so the server knows what the type is
+                    formData.append('image', blob, 'snapshot.png'); //stuffs blob into the virtual form
+                    
+                    //Takes formData package and gives it to backend route using POST request
+                    fetch('/process-frame', {
+                        method: 'POST',
+                        body: formData
+                })
+                
+                    //after Flask responds, take the raw network response and turn into JSON
+                    .then(response => response.json())
+
+                    //takes that JSON response as the variable data and either redirects or alerts user of error
+                    .then(data => {
+                        if(data.redirect_url) {  //redirects to RoyaleAPI page if the URL exists
+                            window.location.href = data.redirect_url;
+                        } else { //Alerts user of error message and returns settings back to normal
+                            alert("Error: " + (data.error || "Could not read text"));
+                            captureBtn.innerText = "Capture & Search RoyaleAPI";
+                            captureBtn.disabled = false;
+                        }
+                    })
+
+                    //catches error if something catastrophic happens like loss of connection
+                    .catch(err => {
+                        console.error('Error:', err); //prints error on the terminal
+                        alert("An error occured during processing."); //alerts user of the error
+
+                        //reset button
+                        captureBtn.innerText = "Capture & Search RoyaleAPI"; 
+                        captureBtn.disabled = false;
+                    });
+                }, 'image/png');  //second argument to canvas.toBlob() and tells the browser to compress the canvas data into a PNG format file  
+            });
+    </script>
+</body>
+</html>
