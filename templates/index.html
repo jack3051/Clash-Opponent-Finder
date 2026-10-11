@@ -13,8 +13,8 @@
     <!-- div container that has the UI for the camera box and instructions -->
     <div class="container">
         <!-- Instructions -->
-        <h1>Scan Phone Screen 2</h1> 
-        <p>Point your camera to the player name and click capture</p>
+        <h1>Scan Phone Screen</h1> 
+        <p>Point your camera to the player name and click the button</p>
 
         <!-- Camera box -->
         <div class="camera-box">
@@ -58,7 +58,6 @@
                 captureBtn.innerText = "Processing OCR...";
                 captureBtn.disabled = true;
 
-                console.log(canvas.width, canvas.height);
                 //takes the image on the canvas and converts it to a blob (binary large object)
                 //This is because the backend needs the canvas image in an actual image file (.png)
                 canvas.toBlob(blob => {//once done converting run the code in the function
