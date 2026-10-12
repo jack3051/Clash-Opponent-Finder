@@ -59,4 +59,4 @@ I used it on the ranked game mode in Clash Royale to achieve a top #510 rank glo
 <img width="414" height="896" alt="IMG_3926" src="https://github.com/user-attachments/assets/b5e77227-9050-4aa5-b44b-306ee13b3091" />
 
 ##Additional notes
-I have used a bunch of comments because this I personally felt that writing all of these comments helped with my understanding of the program. This is my first iteration of the project and will hopefully be improving the project going forward.
+I have used a bunch of comments because this I personally felt that writing all of these comments helped with my understanding of the program. This is my first iteration of the project and will hopefully be improving the project going forward and this is also my CS50 week 10 project.
