@@ -1,4 +1,4 @@
-# Problem it solves:
+# What it does + Problem it solves:
 This is a tool that can be used in Clash Royale to scan an opponent's name to find them on RoyaleAPI.
 
 This is better than searching the name because it can process faster than typing (takes 2-3 seconds) and can type any emoji / international language symbols.
