@@ -54,7 +54,7 @@ Run the program
 
 
 # How I used it:
-I used it on the ranked game mode in Clash Royale to achieve a top #510 rank global. It has been a useful tool to quickly check the opponent's deck which has led me to beat matchups and make plays that I wouldn't have before especially in single elixir.
+I used it on the ranked game mode in Clash Royale to achieve a top #510 rank global. It has been a useful tool to quickly check the opponent's deck which has led me to beat matchups and make plays that I wouldn't have before especially in single elixir. Across 10 trials I've tested, 7 of them were highly useful (was successful in finding the deck they played) and the 3 weren't only because it was a common name (Arthur, Christopher, King) so there were too many results.
 
 <img width="414" height="896" alt="IMG_3926" src="https://github.com/user-attachments/assets/b5e77227-9050-4aa5-b44b-306ee13b3091" />
 
